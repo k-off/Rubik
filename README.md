@@ -5,6 +5,8 @@ An Algo Project at Codam (42) - Rubik's cube solver with A*/greedy/cost-uniform 
 
 [DESCRIPTION](https://github.com/k-off/Rubik/wiki)
 
+[Evaluation Sheet](https://github.com/k-off/Rubik/wiki/Evaluation-Sheet)
+
 ## Usage:
 ```
 make re
