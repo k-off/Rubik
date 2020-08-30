@@ -6,7 +6,7 @@
 /*   By: pacovali <pacovali@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/15 02:33:35 by pacovali      #+#    #+#                 */
-/*   Updated: 2020/08/30 11:31:40 by pacovali      ########   odam.nl         */
+/*   Updated: 2020/08/24 21:00:46 by pacovali      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ Solver::Solver( const int& len ) {
 void	Solver::solve( const int& searchType ) {
 	allStates_.insert( head_.getState() );
 	openStates_.insert( {head_.getWeight() * (searchType & 1 ? 1 : 0) + head_.getCost() * (searchType & 2 ? 1 : 0), &head_} );
+	__uint128_t cur_solution = solution;
 
 	while ( openStates_.size() > 0 ) {
 		auto begin = openStates_.begin();
@@ -97,18 +98,24 @@ void	Solver::solve( const int& searchType ) {
 void	Solver::printSolution( Rubik *solution ) const {
 	vector<pair<char, char>> commands;
 	vector<char> mods = {'\0', '2', '\''};
+	
+	__uint128_t tmp_sol = (__uint128_t)solution;
+	cout << "     ";
+	for (int i = 0; i < 128; i++) {
+			cout << (i % 6 ? '\0' : ' ') << ((uint8_t)tmp_sol & 1);
+			tmp_sol >>= 1;
+		}
+	cout << endl;
 
 	while ( solution->getParent() != nullptr ) {
 		commands.insert( commands.begin(), {solution->getCommand(), solution->getCommandModifier()} );
-
-		// print all states from solution to initial mix
-		// cout << "W: " << solution->getWeight() << " ";
-		// cout << " : " << solution->getCommand() << solution->getCommandModifier() << " : ";
-		// for (int i = 8; i < 128; i++) {
-		// 	cout << (((i - 2) % 6) ? '\0' : ' ') << ((uint8_t)(solution->getState() >> (127 - i)) & 1);
-		// }
-		// cout << endl;
-
+		cout << "W: " << solution->getWeight();
+		__uint128_t state = solution->getState();
+		for (int i = 0; i < 128; i++) {
+			cout << (i % 6 ? '\0' : ' ') << ((uint8_t)state & 1);
+			state >>= 1;
+		}
+		cout << endl;
 		solution = solution->getParent();
 	}
 	for ( auto c = commands.begin(); c < commands.end(); c++ ) {
